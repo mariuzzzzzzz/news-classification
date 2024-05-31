@@ -8,3 +8,4 @@ seaborn
 matplotlib
 openai
 python-dotenv
+beautifulsoup4
