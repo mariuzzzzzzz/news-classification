@@ -1,0 +1,10 @@
+pandas
+numpy
+nltk
+tensorflow
+keras
+scikit-learn
+seaborn
+matplotlib
+openai
+python-dotenv
