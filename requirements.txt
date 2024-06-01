@@ -9,3 +9,6 @@ matplotlib
 openai
 python-dotenv
 beautifulsoup4
+flask
+joblib
+flask-cors
