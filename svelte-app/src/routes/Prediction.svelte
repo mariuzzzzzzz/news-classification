@@ -1,5 +1,4 @@
 <script>
-    import { onMount } from 'svelte';
     import axios from 'axios';
     let article = '';
     let prediction = '';
@@ -18,12 +17,6 @@
 </script>
 
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        padding: 2rem;
-        max-width: 600px;
-        margin: 0 auto;
-    }
     textarea {
         width: 100%;
         height: 150px;
