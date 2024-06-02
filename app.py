@@ -10,6 +10,18 @@ from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
 import numpy as np
+from openai import OpenAI
+from dotenv import load_dotenv
+import os
+
+# Load environment variables from .env file
+load_dotenv()
+
+# Initialize OpenAI API client
+openai_api_key = os.getenv('OPENAI_API_KEY')
+if not openai_api_key:
+    raise ValueError("No OpenAI API key found. Please set the OPENAI_API_KEY environment variable.")
+client = OpenAI(api_key=openai_api_key)
 
 # Download NLTK data
 nltk.download('stopwords')
@@ -56,17 +68,33 @@ def predict():
     if not article:
         return jsonify({'error': 'No article text provided'}), 400
 
-    # Process the input article
-    cleaned_text = process_text(article)
-    sequence = tokenizer.texts_to_sequences([cleaned_text])
-    padded_sequence = pad_sequences(sequence, maxlen=150)
+    try:
+        # Truncate the article text to 1000 characters
+        if len(article) > 1000:
+            article = article[:1000]
 
-    # Make prediction
-    prediction = model.predict(padded_sequence)
-    predicted_label = np.argmax(prediction, axis=1)[0]
-    label = 'REAL' if predicted_label == 1 else 'FAKE'
+        # Process the input article
+        cleaned_text = process_text(article)
+        sequence = tokenizer.texts_to_sequences([cleaned_text])
+        padded_sequence = pad_sequences(sequence, maxlen=150)
 
-    return jsonify({'prediction': label})
+        # Make prediction
+        prediction = model.predict(padded_sequence)
+        predicted_label = np.argmax(prediction, axis=1)[0]
+        label = 'REAL' if predicted_label == 1 else 'FAKE'
+
+        # Generate image using OpenAI API (new API call)
+        response = client.images.generate(
+            prompt=article,
+            n=1,
+            size="256x256"
+        )
+        image_url = response.data[0].url
+
+        return jsonify({'prediction': label, 'image_url': image_url})
+    except Exception as e:
+        print(f"Error during prediction or image generation: {e}")
+        return jsonify({'error': f"Internal server error: {str(e)}"}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
