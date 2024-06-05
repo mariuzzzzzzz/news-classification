@@ -27,6 +27,7 @@ The folders `/models`, `/raw-data`, and the file `.env` can be downloaded via th
 
 Ensure your root directory is organized as follows to run the code successfully:
 
+```
 news-clasification
 ├── .venv
 ├── models
@@ -46,3 +47,4 @@ news-clasification
 ├── app.py
 ├── README.md
 └── requirements.txt
+```
