@@ -30,7 +30,7 @@ nltk.download('wordnet')
 
 # Initialize Flask app
 app = Flask(__name__)
-CORS(app)  # Enable CORS for all routes
+CORS(app)
 
 # Load the pre-trained model and tokenizer
 model_path = './models/ann-model-v3.h5'
@@ -44,7 +44,7 @@ try:
 except Exception as e:
     print(f"Error loading model or tokenizer: {e}")
 
-# Define text preprocessing function
+# Text preprocessing function
 def process_text(text):
     text = re.sub(r'\s+', ' ', text, flags=re.I)
     text = re.sub(r'\W', ' ', str(text))
@@ -83,7 +83,7 @@ def predict():
         predicted_label = np.argmax(prediction, axis=1)[0]
         label = 'REAL' if predicted_label == 1 else 'FAKE'
 
-        # Generate image using OpenAI API (new API call)
+        # Generate image using OpenAI API
         response = client.images.generate(
             prompt=article,
             n=1,
